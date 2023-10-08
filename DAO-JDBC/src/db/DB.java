@@ -11,7 +11,7 @@ public class DB {
 
 	private static Connection conn = null;
 
-	public Connection getConnection() {
+	public static Connection getConnection() {
 		if (conn == null) {
 			try {
 				Properties props = loadProperties();
@@ -25,7 +25,7 @@ public class DB {
 		return conn;
 	}
 	
-	public void closeConnection() {
+	public static void closeConnection() {
 		if(conn != null) {
 			try {
 				conn.close();
@@ -35,7 +35,7 @@ public class DB {
 		}
 	}
 	
-	private Properties loadProperties() {
+	private static Properties loadProperties() {
 		try(FileInputStream fs = new FileInputStream("db.properties")) {
 			Properties props = new Properties();
 			props.load(fs);

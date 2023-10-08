@@ -22,6 +22,10 @@ public class Program {
 		
 		sellers.forEach(System.out::println);
 		
+		sellers = sellerDao.findAll();
+		
+		sellers.forEach(System.out::println);
+		
 	}
 
 }

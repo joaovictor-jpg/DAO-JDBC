@@ -218,6 +218,30 @@ public class SellerDaoJDBC extends RepositoryGenerics<Seller> implements SellerD
 
 	@Override
 	public void deleteById(int id) {
-		
+		PreparedStatement ps = null;
+		try {
+			conn.setAutoCommit(false);
+			ps = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+
+			ps.setInt(1, id);
+
+			ps.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+				throw new DbException(e.getMessage());
+			} catch (SQLException e1) {
+				throw new DbIntegrityException("Error: " + e.getMessage());
+			}
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				}
+			}
+		}
 	}
 }

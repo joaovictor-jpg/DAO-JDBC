@@ -45,6 +45,7 @@ public class Program {
 		seller.setEmail("thalita@gmail.com");
 		sellerDao.update(seller);
 
+		sellerDao.deleteById(9);
 		sellers.forEach(System.out::println);
 
 	}

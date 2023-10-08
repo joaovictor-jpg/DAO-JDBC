@@ -180,13 +180,44 @@ public class SellerDaoJDBC extends RepositoryGenerics<Seller> implements SellerD
 
 	@Override
 	public void update(Seller obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
 
+		try {
+			conn.setAutoCommit(false);
+
+			ps = conn.prepareStatement("UPDATE seller "
+					+ "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " + "WHERE Id = ?");
+
+			ps.setString(1, obj.getName());
+			ps.setString(2, obj.getEmail());
+			ps.setDate(3, new Date(obj.getBirthDate().getTime()));
+			ps.setDouble(4, obj.getBaseSalary());
+			ps.setInt(5, obj.getDepartment().getId());
+			ps.setInt(6, obj.getId());
+
+			ps.executeUpdate();
+
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+				throw new DbException(e.getMessage());
+			} catch (SQLException e1) {
+				throw new DbIntegrityException("Error: " + e.getMessage());
+			}
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				}
+			}
+		}
 	}
 
 	@Override
 	public void deleteById(int id) {
-		// TODO Auto-generated method stub
-
+		
 	}
 }

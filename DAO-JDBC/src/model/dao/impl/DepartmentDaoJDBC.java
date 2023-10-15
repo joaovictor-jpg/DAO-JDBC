@@ -2,7 +2,9 @@ package model.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DbException;
@@ -60,7 +62,34 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 
 	@Override
 	public List<Department> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			List<Department> dp = new ArrayList<>();
+			ps = conn.prepareStatement("SELECT * FROM department");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				dp.add(new Department(rs.getInt("Id"), rs.getString("Name")));
+			}
+			return dp;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+			}
+		}
+
 	}
 }

@@ -97,12 +97,29 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 
 	}
 
+	
 	@Override
 	public void deleteById(int id) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
 
+		try {
+			ps = conn.prepareStatement("DELETE FROM department WHERE ID = ?");
+			ps.setInt(1, id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+			}
+		}
 	}
 
+	
 	@Override
 	public Department findById(int id) {
 		Department dp = null;
@@ -120,6 +137,13 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+			}
 			if (ps != null) {
 				try {
 					ps.close();

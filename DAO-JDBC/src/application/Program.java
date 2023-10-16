@@ -1,14 +1,19 @@
 package application;
 
+import java.util.List;
+
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
+import model.entities.Department;
 
 public class Program {
 
 	public static void main(String[] args) {
 		DepartmentDao depGenercs = DaoFactory.createDepartmentDao();
 		
-		System.out.println(depGenercs.findById(3));
+		List<Department> dp = depGenercs.findAll();
+		
+		dp.forEach(System.out::println);
 	}
 
 }

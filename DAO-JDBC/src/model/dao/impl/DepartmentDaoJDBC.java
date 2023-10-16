@@ -20,12 +20,6 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 	}
 
 	@Override
-	public Department findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void insert(Department obj) {
 		PreparedStatement ps = null;
 
@@ -71,12 +65,6 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 	}
 
 	@Override
-	public void deleteById(int id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public List<Department> findAll() {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -107,5 +95,38 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 			}
 		}
 
+	}
+
+	@Override
+	public void deleteById(int id) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Department findById(int id) {
+		Department dp = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = conn.prepareStatement("SELECT * FROM department WHERE ID = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				dp = new Department(rs.getInt("ID"), rs.getString("NAME"));
+			}
+			return dp;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+			}
+		}
 	}
 }

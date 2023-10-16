@@ -50,8 +50,24 @@ public class DepartmentDaoJDBC extends RepositoryGenerics<Department> implements
 
 	@Override
 	public void update(Department obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
 
+		try {
+			ps = conn.prepareStatement("UPDATE department SET NAME = ? WHERE ID = ?");
+			ps.setString(1, obj.getName());
+			ps.setInt(2, obj.getId());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+			}
+		}
 	}
 
 	@Override

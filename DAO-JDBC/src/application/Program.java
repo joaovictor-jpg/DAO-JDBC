@@ -13,9 +13,11 @@ public class Program {
 		IGenercs<Department> depGenercs = DaoFactory.createDepartmentDao();
 
 		List<Department> depList = new ArrayList<>();
-		
+
+		depGenercs.update(new Department(5, "Jogos"));
+
 		depList = depGenercs.findAll();
-		
+
 		depList.forEach(System.out::println);
 	}
 
